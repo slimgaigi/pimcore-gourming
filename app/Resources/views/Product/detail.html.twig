@@ -1,0 +1,14 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.description }}</p>
+    <ul>
+        {% for image in product.images %}
+            <li><img src="{{ image }}" alt=""></li>
+        {% endfor %}
+    </ul>
+    {% if product.canedit %}
+        <a href="/product/edit/{{ product.id }}">{{ 'Edit this product' }}</a>
+    {% endif %}
+{% endblock %}

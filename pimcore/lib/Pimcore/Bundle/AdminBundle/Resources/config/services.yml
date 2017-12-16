@@ -1,0 +1,51 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    #
+    # SESSION
+    #
+
+    Pimcore\Bundle\AdminBundle\Session\AdminSessionBagConfigurator:
+        arguments:
+            - '%pimcore.admin.session.attribute_bags%'
+        tags:
+            - { name: pimcore.session.configurator }
+
+    Pimcore\Bundle\AdminBundle\Session\Handler\AdminSessionHandler:
+        public: true
+        calls:
+            - [setLogger, ['@logger']]
+        tags:
+            - { name: monolog.logger, channel: pimcore_admin.session }
+
+    #
+    # API
+    #
+
+    Pimcore\Model\Webservice\Service: ~
+
+    #
+    # CONTROLLERS
+    #
+
+    # auto-register all controllers as services
+    Pimcore\Bundle\AdminBundle\Controller\:
+        resource: '../../Controller'
+        public: true
+        tags: ['controller.service_arguments']
+
+    #
+    # TRANSLATIONS
+    #
+
+    Pimcore\Bundle\AdminBundle\Translation\AdminUserTranslator: ~
+
+    #
+    # GRID CONFIG
+    #
+    pimcore.object.gridcolumconfig:
+        class: Pimcore\Model\DataObject\GridColumnConfig\Service
+        public: true

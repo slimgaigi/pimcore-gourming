@@ -27,7 +27,15 @@ class ProductController extends FrontendController
     $paginator->setCurrentPageNumber($request->get('page'));
     $paginator->setItemCountPerPage(5);
 
-    $this->view->products = $paginator;
+    $images = [];
+    foreach ($paginator as $product) {
+      $images[] = Product::getById($product->o_id)->getImages();
+    }
+
+    $this->view->vars = [
+      'products' => $paginator,
+      'images' => $images,
+    ];
   }
 
   public function detailAction($id)
@@ -44,7 +52,7 @@ class ProductController extends FrontendController
       'name' => $product->getName(),
       'description' => $product->getDescription(),
       'images' => $images,
-      'canedit' => $this->canEdit(),
+      'editable' => $this->canEdit(),
     ];
 
     $this->view->product = $vars;

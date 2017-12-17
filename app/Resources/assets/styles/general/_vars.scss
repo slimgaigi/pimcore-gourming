@@ -1,0 +1,64 @@
+/**
+ * Colors
+ */
+//@formatter:off
+$test: violet;
+$colors: (
+    inherit:     inherit,
+    blue-dark:   #291d6b,
+    blue:        #4a2cf9,
+    purple:      #be23d9,
+    gray-dark:   #58508c,
+    gray:        #7789a6,
+    gray-medium: #a1a2a2,
+    gray-light:  #eef2f5,
+    gray-blue:   #8fa0bd,
+    cream:       #fafafd,
+    shadow:      #a1a9b0,
+    border:      #90a1bc,
+    error:       #a51b00
+);
+//@formatter:on
+
+@function colors($name: violet) {
+    @if map_has_key($colors, $name) {
+        @return map-get($colors, $name);
+    }
+    @else {
+        @return $name;
+    }
+}
+
+/**
+ * Breakpoints
+ */
+$small: 767px;
+$medium: 1023px;
+
+/**
+ * Utils
+ */
+$speed: 200ms;
+$ctn-width-val: 1380;
+$ctn-width: #{$ctn-width-val}px;
+
+// Refs from psd design
+$refs: (
+    mobile: 375,
+    tablet: 768,
+    desktop: 1440
+);
+@function ref($name: desktop) {
+    @return map-get($refs, $name);
+}
+
+/*
+--- Z-Index register ---
+
+-1:
+
+0:
+
+1:
+
+*/

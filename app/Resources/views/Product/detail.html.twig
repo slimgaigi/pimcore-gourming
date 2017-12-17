@@ -1,14 +1,41 @@
 {% extends 'layout.html.twig' %}
 
 {% block content %}
-    <h1>{{ product.name }}</h1>
-    <p>{{ product.description }}</p>
-    <ul>
-        {% for image in product.images %}
-            <li><img src="{{ image }}" alt=""></li>
-        {% endfor %}
-    </ul>
-    {% if product.canedit %}
-        <a href="/product/edit/{{ product.id }}">{{ 'Edit this product' }}</a>
-    {% endif %}
+    {% set productClasses = [
+        'product',
+        product.editable ? 'editable'
+    ] %}
+
+    <section class="{{ productClasses | join(' ') }}">
+        {% if product.editable %}
+            <form action="" id="pForm">
+        {% endif %}
+            <h1 class="product__name">
+                {{ product.name }}
+                {% if product.editable %}
+                    <input type="text" class="product__input product__input--name" value="{{ product.name }}" id="pName" required>
+                {% endif %}
+            </h1>
+            <p class="product__description">
+                {{ product.description }}
+                {% if product.editable %}
+                    <textarea class="product__input product__input--description" id="pDescription">{{ product.description }}</textarea>
+                {% endif %}
+            </p>
+            <ul class="product__images-list">
+                {% for image in product.images %}
+                    <li class="product__images-item">
+                        <img src="{{ image }}" alt="" class="product__image">
+                        {% if product.editable %}
+                            <input type="file" class="product__input product__input--image" id="pImage-{{ loop.index0 }}">
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% if product.editable %}
+                <button type="submit" class="product__input product__input--submit">{{ 'Save changes' | trans }}</button>
+            </form>
+        {% endif %}
+    </section>
+
 {% endblock %}

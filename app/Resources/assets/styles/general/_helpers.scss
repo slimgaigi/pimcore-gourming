@@ -1,0 +1,124 @@
+/*
+* Functions
+*/
+@function dynsize($min: 10, $max: 20, $bpmin: 320, $bpmax: 768) {
+    @return calc(#{$min}px + #{$max - $min} * (100vw - #{$bpmin}px) / #{$bpmax - $bpmin});
+}
+
+// $min : min font-size in px
+// $var : variable font-size in vw
+@function fz-var($min, $var) {
+    @return calc(#{$min}px + #{$var}vw);
+}
+
+// $min : min font-size in px
+// $px : mesured font-size value on desktop PSD
+@function fz($px, $min: 8) {
+    @return fz-var($min, (100 * ($px - $min) / ref(desktop)));
+}
+
+// $min : min font-size in px
+// $px : mesured font-size value on tablet PSD
+@function fz-t($px, $min: 8) {
+    @return fz-var($min, (100 * ($px - $min) / ref(tablet)));
+}
+
+// $min : min font-size in px
+// $px : mesured font-size value on mobile PSD
+@function fz-m($px, $min: 8) {
+    @return fz-var($min, (100 * ($px - $min) / ref(mobile)));
+}
+
+@function get-vw($dim, $ref: ref(desktop)) {
+    @return (100vw * $dim / $ref);
+}
+
+@function vw($dim: ref(desktop)) {
+    @return (100vw * $dim/ref(desktop));
+}
+
+@function vw-t($dim: ref(tablet)) {
+    @return (100vw * $dim/ref(tablet));
+}
+
+@function vw-m($dim: ref(mobile)) {
+    @return (100vw * $dim/ref(mobile));
+}
+
+/*
+* Mixins
+*/
+
+//Media queries management
+@mixin respond($min: null, $max: null) {
+    @if ($min != null and $max != null) {
+        @media screen and (min-width: $min) and (max-width: $max - 1) {
+            @content;
+        }
+    } @else if ($max != null) {
+        @media screen and (max-width: $max - 1) {
+            @content;
+        }
+    } @else {
+        @media screen and (min-width: $min) {
+            @content;
+        }
+    }
+}
+@mixin mq($min: null, $max: null) {
+    @if ($min != null and $max != null) {
+        @media screen and (min-width: $min) and (max-width: $max) {
+            @content;
+        }
+    } @else if ($max != null) {
+        @media screen and (max-width: $max) {
+            @content;
+        }
+    } @else {
+        @media screen and (min-width: $min) {
+            @content;
+        }
+    }
+}
+@mixin small() {
+    @include mq($max: $small) {
+        @content;
+    }
+}
+@mixin small-medium() {
+    @include mq($max: $medium) {
+        @content;
+    }
+}
+@mixin medium() {
+    @include mq($min: ($small + 1), $max: $medium) {
+        @content;
+    }
+}
+@mixin medium-large() {
+    @include mq($min: ($small + 1)) {
+        @content;
+    }
+}
+@mixin large() {
+    @include mq($min: ($medium + 1)) {
+        @content;
+    }
+}
+
+@mixin ctn() {
+    @include mq($max: $ctn-width) {
+        @content;
+    }
+}
+
+@mixin max() {
+    @include mq($max: #{ref(desktop)}px) {
+        @content;
+    }
+}
+
+@mixin outline($color: red) {
+    outline: 1px solid $color;
+    outline-offset: -1px;
+}

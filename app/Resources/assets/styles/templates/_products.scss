@@ -1,0 +1,96 @@
+.products { // Products list page
+
+    &__title {
+        margin-bottom: 50px;
+    }
+
+    &__list {
+        display: flex;
+        justify-content: stretch;
+    }
+
+    &__item {
+        flex: 0 1 (100% / 4);
+
+        &-link {
+            position: relative;
+            display: block;
+
+            &:hover {
+                .products__item-image {
+                    opacity: 1;
+                    transform: translate(-50%, -50%) scale(1.1);
+                }
+                .products__item-name {
+                    color: colors(blue);
+
+                    &:before {
+                        right: 30px;
+                    }
+                }
+            }
+
+            &:before {
+                content: '';
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                height: 6rem;
+                background-image: linear-gradient(to top, colors(white) 0%, colors(white) 25%, rgba(colors(white), 0) 100%);
+                z-index: 1;
+            }
+        }
+
+        &-visual {
+            position: relative;
+            padding-top: percentage(3/4);
+            overflow: hidden;
+            background-color: colors(white);
+        }
+
+        &-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            object-fit: cover;
+            opacity: 0.5;
+            transition: opacity $speed ease, transform $speed ease;
+        }
+
+        &-name {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 100%;
+            padding: 10px 30px;
+            transform: translate(-50%, 50%);
+            margin: 0;
+            font-size: 2rem;
+            font-style: italic;
+            color: colors(blue-dark);
+            text-align: center;
+            transition: color $speed ease;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            z-index: 1;
+
+            &:before {
+                content: '';
+                position: absolute;
+                top: 3.4rem;
+                left: 30px;
+                right: calc(100% - 30px);
+                height: 2px;
+                transition: right $speed ease;
+                background-color: colors(blue);
+            }
+        }
+    }
+}
+
+.product { // Product detail page
+
+}

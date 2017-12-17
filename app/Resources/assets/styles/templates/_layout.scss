@@ -1,0 +1,15 @@
+body {
+    background-color: colors(cream);
+}
+
+.main {
+    padding: 0 30px;
+
+    &__content {
+        max-width: 1440px;
+        padding: 50px;
+        margin: 0 auto;
+        border-radius: 5px;
+        background-color: colors(white);
+    }
+}

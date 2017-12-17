@@ -28,6 +28,7 @@ h2, .h2,
 h3,
 h4 {
     line-height: 1.2;
+    margin: 0;
 
     @include small {
         word-wrap: break-word;

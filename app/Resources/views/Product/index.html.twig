@@ -13,9 +13,11 @@
                         <div class="products__item-visual">
                             {% if (images[loop.index0] | length) > 0 %}
                                 <img src="{{ images[loop.index0][0] }}" alt="{{ product.name }}" class="products__item-image">
+                                {% else %}
+                                    <img src="{{ asset('dist/images/no_image_available.jpg') }}" alt="no image" class="products__item-image">
                             {% endif %}
                         </div>
-                        <h2 class="products__item-name">{{ product.name }}</h2>
+                        <h2 class="products__item-name" title="{{ product.name }}">{{ product.name }}</h2>
                     </a>
                 </li>
             {% endfor %}

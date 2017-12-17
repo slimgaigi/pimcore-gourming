@@ -8,13 +8,17 @@ module.exports = (function ($) {
         apiService = require('./api-service'),
         $product,
         $pName,
+        $pNameInput,
         $pDescription,
+        $pDescriptionInput,
+        $pImagesList,
         $pImages,
+        $addImageCta,
         pObject = {
             id: null,
             name: '',
             description: '',
-            images: ''
+            images: []
         }
     ;
 
@@ -23,28 +27,48 @@ module.exports = (function ($) {
     });
 
     function setListeners() {
+        $product.on('click', '.cta', function(e) {
+            let $target = $(e.currentTarget),
+                $delConfirm = $('<button type="button">I confirm image delete !</button>'),
+                $delCancel = $('<button type="button">Cancel image delete</button>'),
+                $popupContent = $('<div class="popup-content"></div>')
+            ;
+
+            console.log($target);
+
+            if ($target.hasClass('cta--delete')) {
+                console.log('delete');
+                $popupContent.append($delConfirm, $delCancel);
+                $delCancel.click(() => {
+                    $.magnificPopup.close();
+                });
+
+                $delConfirm.click(() => {
+                    $.magnificPopup.close();
+                });
+
+                $.magnificPopup.open({
+                    items: {
+                        type: 'inline',
+                        src: $popupContent
+                    }
+                });
+            }
+
+        });
         $pName.on({
-            mouseenter: () => {
-                $pName.addClass('editable');
-            },
-            mouseleave: () => {
-                $pName.removeClass('editable');
+            click: () => {
+                $pName.addClass('js-edit-mode');
             }
         });
         $pDescription.on({
-            mouseenter: () => {
-                $pDescription.addClass('editable');
-            },
-            mouseleave: () => {
-                $pDescription.removeClass('editable');
+            click: () => {
+                $pDescription.addClass('js-edit-mode');
             }
         });
-        $pImages.on({
-            mouseenter: () => {
-                $pImages.addClass('editable');
-            },
-            mouseleave: () => {
-                $pImages.removeClass('editable');
+        $pImagesList.on({
+            click: () => {
+                $pImagesList.addClass('js-edit-mode');
             }
         });
     }
@@ -57,11 +81,23 @@ module.exports = (function ($) {
         }
 
         $pName = $product.find('.product__name');
+        $pNameInput = $product.find('.product__input--name');
         $pDescription = $product.find('.product__description');
-        $pImages = $product.find('.product__images-list');
+        $pDescriptionInput = $product.find('.product__input--description');
+        $pImagesList = $product.find('.product__images-list');
+        $pImages = $pImagesList.find('.product__image');
+        $addImageCta = $product.find('#addImage');
+
+        pObject.name = $pName.text();
+        pObject.description = $pDescription.html();
+
+        $pImages.each((i, img) => {
+            pObject.images.push(img);
+        });
+
+        apiService.get(pObject.id);
 
         setListeners();
-        apiService.get(pObject.id);
     }
 
     return {

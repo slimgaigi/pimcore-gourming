@@ -10,6 +10,7 @@ const
     path = require('path'),
     paths = {
         source: './app/Resources/assets/',
+        views: './app/Resources/views/',
         dist: './web/dist/'
     }
 ;
@@ -38,7 +39,7 @@ gulp.task('imgSvg', function () {
         .pipe(svgstore({
             inlineSvg: true
         }))
-        .pipe(gulp.dest('images', {cwd: paths.dist}))
+        .pipe(gulp.dest('icons', {cwd: paths.views}))
         ;
 });
 

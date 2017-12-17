@@ -48,5 +48,8 @@
   "bugs": {
     "url": "https://github.com/slimgaigi/pimcore-gourming/issues"
   },
-  "homepage": "https://github.com/slimgaigi/pimcore-gourming#readme"
+  "homepage": "https://github.com/slimgaigi/pimcore-gourming#readme",
+  "dependencies": {
+    "fine-uploader": "5.15.4"
+  }
 }

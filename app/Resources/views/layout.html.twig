@@ -12,6 +12,7 @@
     {# we use the view helper to have cache buster functionality #}
     {% do pimcore_head_link().appendStylesheet(asset('static/bootstrap/css/bootstrap.css')) %}
     {% do pimcore_head_link().appendStylesheet(asset('static/css/global.css')) %}
+    {% do pimcore_head_link().appendStylesheet(asset('static/lib/magnific/magnific.css'), 'screen') %}
     {% do pimcore_head_link().appendStylesheet(asset('static/css/print.css'), 'print') %}
     {% do pimcore_head_link().appendStylesheet('https://fonts.googleapis.com/css?family=Montserrat:300,300i,500,500i,700,700i') %}
     {% do pimcore_head_link().appendStylesheet(asset('dist/styles/styles.css')) %}
@@ -22,6 +23,7 @@
 
     {% do pimcore_head_script().appendFile(asset('static/js/srcset-polyfill.min.js')) %}
     {% do pimcore_head_script().appendFile('https://code.jquery.com/jquery-3.2.1.min.js') %}
+    {% do pimcore_head_script().appendFile(asset('static/lib/magnific/magnific.js')) %}
     {% do pimcore_head_script().appendFile(asset('dist/scripts/data.min.js')) %}
     {% do pimcore_head_script().appendFile(asset('dist/scripts/main.min.js')) %}
 
@@ -67,6 +69,8 @@
     {% endblock %}
 </head>
 <body{% if isPortal %} class="portal-page"{% endif %}>
+
+<div id="svgSprite">{% include 'icons/icons.svg' %}</div>
 
 <div class="navbar-wrapper">
 

@@ -23,6 +23,7 @@
 
     {% do pimcore_head_script().appendFile(asset('static/js/srcset-polyfill.min.js')) %}
     {% do pimcore_head_script().appendFile('https://code.jquery.com/jquery-3.2.1.min.js') %}
+    {% do pimcore_head_script().appendFile(asset('static/bootstrap/js/bootstrap.js')) %}
     {% do pimcore_head_script().appendFile(asset('static/lib/magnific/magnific.js')) %}
     {% do pimcore_head_script().appendFile(asset('dist/scripts/data.min.js')) %}
     {% do pimcore_head_script().appendFile(asset('dist/scripts/main.min.js')) %}

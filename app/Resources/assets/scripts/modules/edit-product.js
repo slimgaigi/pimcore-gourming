@@ -6,6 +6,9 @@ module.exports = (function ($) {
 
     let name = 'editProduct',
         apiService = require('./api-service'),
+        productModel = require('./product-model'),
+        ProductField = productModel.ProductField,
+        Product = productModel.Product,
         $product,
         $pName,
         $pNameInput,
@@ -16,9 +19,7 @@ module.exports = (function ($) {
         $addImageCta,
         pObject = {
             id: null,
-            name: '',
-            description: '',
-            images: []
+            images: [],
         }
     ;
 
@@ -27,23 +28,44 @@ module.exports = (function ($) {
     });
 
     function setListeners() {
-        $product.on('click', '.cta', function(e) {
+        $product.on('click', '.cta', function (e) {
             let $target = $(e.currentTarget),
-                $delConfirm = $('<button type="button">I confirm image delete !</button>'),
-                $delCancel = $('<button type="button">Cancel image delete</button>'),
-                $popupContent = $('<div class="popup-content"></div>')
+                $popupContent = $('<div class="popup-content"></div>'),
+                imgIndex,
+                $delConfirm,
+                $delCancel
             ;
 
-            console.log($target);
-
             if ($target.hasClass('cta--delete')) {
-                console.log('delete');
+                imgIndex = $pImagesList.find('.cta--delete').index($target);
+
+                $delConfirm = $('<button type="button">I confirm image delete !</button>');
+                $delCancel = $('<button type="button">Cancel image delete</button>');
                 $popupContent.append($delConfirm, $delCancel);
+
                 $delCancel.click(() => {
                     $.magnificPopup.close();
                 });
 
                 $delConfirm.click(() => {
+                    let updatedProduct = Object.assign({}, pObject.product.native()),
+                        data
+                    ;
+
+                    updatedProduct.images.value = pObject.product.images.value.filter((o, i) => i !== imgIndex);
+
+                    data = Object.assign({}, pObject.data, {elements: [
+                            updatedProduct.name,
+                            updatedProduct.description,
+                            updatedProduct.images
+                        ]})
+                    ;
+
+                    console.log(data);
+
+                    apiService.update(pObject.id, data, (r) => {
+                        console.log(r);
+                    });
                     $.magnificPopup.close();
                 });
 
@@ -88,14 +110,17 @@ module.exports = (function ($) {
         $pImages = $pImagesList.find('.product__image');
         $addImageCta = $product.find('#addImage');
 
-        pObject.name = $pName.text();
-        pObject.description = $pDescription.html();
-
         $pImages.each((i, img) => {
             pObject.images.push(img);
         });
 
-        apiService.get(pObject.id);
+        apiService.get(pObject.id, (p) => { // let's record the product
+            pObject.data = p.data;
+            pObject.product = new Product(p.data.id);
+            pObject.product.name = new ProductField(p.data.elements[0]);
+            pObject.product.description = new ProductField(p.data.elements[1]);
+            pObject.product.images = new ProductField(p.data.elements[2]);
+        });
 
         setListeners();
     }

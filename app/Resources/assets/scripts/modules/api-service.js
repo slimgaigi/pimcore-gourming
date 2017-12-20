@@ -6,56 +6,55 @@ module.exports = (function ($) {
 
     let name = 'apiService';
 
-    function get(pId) {
-        $.ajax(`/webservice/rest/object/id/${pId}`, {
-            method: 'GET'
-        }).then((p) => {
-            if (!p.success) {
-                console.log(p.msg);
-            }
+    function fail(cb, p) {
+        if (cb && typeof cb === 'function') {
+            cb(p);
+        }
+    }
+
+    function success(cb, p) {
+        if (cb && typeof cb === 'function') {
+            cb(p);
+        }
+    }
+
+    function get(pId, cb, errCb) {
+        $.ajax(`/webservice/rest/object/id/${pId}`).then((p) => {
+            success(cb, p);
             return p;
+        }).fail((r, s) => {
+            fail(errCb, s);
         });
     }
 
-    function del(pId) {
-        $.ajax(`/webservice/rest/object/id/${pId}`, {
-            method: 'DELETE'
-        }).then((p) => {
-            if (!p.success) {
-                console.log(p.msg);
-            }
+    function del(pId, cb, errCb) {
+        $.ajax(`/webservice/rest/object/id/${pId}?method=delete`).then((p) => {
+            success(cb, p);
             return p;
+        }).fail((r, s) => {
+            fail(errCb, s);
         });
     }
 
-    function create(pId, elements) {
-        $.ajax(`/webservice/rest/object/id/${pId}`, {
-            method: 'PUT',
-            data: {
-                className: "Product",
-                elements: elements,
-            },
+    function create(pId, data, cb, errCb) {
+        $.ajax(`/webservice/rest/object/id/${pId}?method=PUT`, {
+            data: JSON.stringify(data),
         }).then((p) => {
-            if (!p.success) {
-                console.log(p.msg);
-            }
+            success(cb, p);
             return p;
+        }).fail((r, s) => {
+            fail(errCb, s);
         });
     }
 
-    function update(pId, elements) {
-        $.ajax(`/webservice/rest/object/id/${pId}`, {
-            method: 'PUT',
-            data: {
-                className: "Product",
-                elements: elements,
-                id: pId
-            },
+    function update(pId, data, cb, errCb) {
+        $.ajax(`/webservice/rest/object/id/${pId}?method=PUT`, {
+            data: JSON.stringify(data),
         }).then((p) => {
-            if (!p.success) {
-                console.log(p.msg);
-            }
+            success(cb, p);
             return p;
+        }).fail((r, s) => {
+            fail(errCb, s);
         });
     }
 

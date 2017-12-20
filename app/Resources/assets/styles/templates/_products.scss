@@ -101,7 +101,7 @@
     &__name,
     &__description {
         &.js-edit-mode,
-        &:hover {
+        &.editable:hover {
             .product__value {
                 display: none;
             }

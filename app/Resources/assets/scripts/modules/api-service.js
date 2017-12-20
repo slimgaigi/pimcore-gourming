@@ -4,57 +4,43 @@
 module.exports = (function ($) {
     'use strict';
 
-    let name = 'apiService';
-
-    function fail(cb, p) {
-        if (cb && typeof cb === 'function') {
-            cb(p);
+    let name = 'apiService',
+        S = require('string'),
+        wsUrlMap = {
+            product: {
+                get: S('/webservice/rest/object/id/{{id}}'),
+                del: S('/webservice/rest/object/id/{{id}}?method=delete'),
+                create: S('/product/create'),
+                update: S('/product/update/{{id}}'),
+            },
+            image: {
+                get: S('/webservice/rest/asset/id/{{id}}'),
+                del: S('/webservice/rest/asset/id/{{id}}?method=delete'),
+                create: S('/webservice/rest/asset?method=PUT'),
+                update: S('/webservice/rest/asset?method=PUT'),
+            },
         }
+    ;
+
+    function get(id, type) {
+        return $.ajax(wsUrlMap[type].get.template({id}).s);
     }
 
-    function success(cb, p) {
-        if (cb && typeof cb === 'function') {
-            cb(p);
-        }
+    function del(id, type) {
+        return $.ajax(wsUrlMap[type].del.template({id}).s);
     }
 
-    function get(pId, cb, errCb) {
-        $.ajax(`/webservice/rest/object/id/${pId}`).then((p) => {
-            success(cb, p);
-            return p;
-        }).fail((r, s) => {
-            fail(errCb, s);
-        });
-    }
-
-    function del(pId, cb, errCb) {
-        $.ajax(`/webservice/rest/object/id/${pId}?method=delete`).then((p) => {
-            success(cb, p);
-            return p;
-        }).fail((r, s) => {
-            fail(errCb, s);
-        });
-    }
-
-    function create(pId, data, cb, errCb) {
-        $.ajax(`/webservice/rest/object/id/${pId}?method=PUT`, {
+    function create(id, type, data) {
+        return $.ajax(wsUrlMap[type].create.template({id}).s, {
+            method: 'POST',
             data: JSON.stringify(data),
-        }).then((p) => {
-            success(cb, p);
-            return p;
-        }).fail((r, s) => {
-            fail(errCb, s);
         });
     }
 
-    function update(pId, data, cb, errCb) {
-        $.ajax(`/webservice/rest/object/id/${pId}?method=PUT`, {
+    function update(id, type, data) {
+        return $.ajax(wsUrlMap[type].update.template({id}).s, {
+            method: 'POST',
             data: JSON.stringify(data),
-        }).then((p) => {
-            success(cb, p);
-            return p;
-        }).fail((r, s) => {
-            fail(errCb, s);
         });
     }
 

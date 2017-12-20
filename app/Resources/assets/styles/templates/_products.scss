@@ -158,6 +158,26 @@
             visibility: hidden;
             opacity: 0;
             transition: opacity $speed ease, visibility 0s ease $speed;
+
+            .cta--delete {
+                position: absolute;
+                right: 0;
+                background-color: rgba(colors(white), 0.8);
+                border: 1px solid colors(white);
+            }
+
+            .product__input--image {
+                position: absolute;
+                top: 36px;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: rgba(colors(white),0.8);
+            }
         }
+    }
+
+    .cta--add {
+        margin: 30px 0;
     }
 }

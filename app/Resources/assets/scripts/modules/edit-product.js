@@ -5,7 +5,9 @@ module.exports = (function ($) {
     'use strict';
 
     let name = 'editProduct',
-        apiService = require('./api-service'),
+        S = require('string'),
+        Rx = require('rxjs-es/Rx'),
+        api = require('./api-service'),
         productModel = require('./product-model'),
         ProductField = productModel.ProductField,
         Product = productModel.Product,
@@ -19,13 +21,45 @@ module.exports = (function ($) {
         $addImageCta,
         pObject = {
             id: null,
-            images: [],
-        }
+        },
+        imgItemTpl = S(`
+        <li class="product__images-item">
+            <img src="{{ src }}" alt="" class="product__image">
+            <div class="product__image-ctas">
+                <button type="button" class="cta cta--delete"><svg class="icon icon--close"><use xlink:href="#icon-close"></use></svg></button>
+                <input type="file" class="product__input product__input--image" id="pImage-{{ index }}" name="images[]">
+            </div>
+        </li>
+        `)
     ;
 
     window.location.href.replace(/product\/(\d+)/gi, (a, id) => {
         pObject.id = id;
     });
+
+    function setProductData(data) {
+        pObject.data = data;
+        pObject.product = new Product(data.id);
+        pObject.product.name = new ProductField(data.elements[0]);
+        pObject.product.description = new ProductField(data.elements[1]);
+        pObject.product.images = new ProductField(data.elements[2]);
+    }
+
+    function updateImagesList() {
+        let source = Rx.Observable.forkJoin(pObject.product.images.value.map((img) => {
+                return api.get(img.id, 'image');
+            })).subscribe((a) => {
+                $pImagesList.html('');
+                a.map((r, i) => {
+                    $(imgItemTpl.template({
+                        src: r.data.path + r.data.filename,
+                        index: i
+                    }).s).appendTo($pImagesList)
+                    ;
+                });
+            })
+        ;
+    }
 
     function setListeners() {
         $product.on('click', '.cta', function (e) {
@@ -54,18 +88,22 @@ module.exports = (function ($) {
 
                     updatedProduct.images.value = pObject.product.images.value.filter((o, i) => i !== imgIndex);
 
-                    data = Object.assign({}, pObject.data, {elements: [
+                    data = Object.assign({}, pObject.data, {
+                        elements: [
                             updatedProduct.name,
                             updatedProduct.description,
                             updatedProduct.images
-                        ]})
+                        ]
+                    })
                     ;
 
-                    console.log(data);
-
-                    apiService.update(pObject.id, data, (r) => {
-                        console.log(r);
-                    });
+                    api
+                        .update(pObject.id, 'product', data)
+                        .then((r) => {
+                            setProductData(r.data);
+                            updateImagesList();
+                        })
+                    ;
                     $.magnificPopup.close();
                 });
 
@@ -110,17 +148,12 @@ module.exports = (function ($) {
         $pImages = $pImagesList.find('.product__image');
         $addImageCta = $product.find('#addImage');
 
-        $pImages.each((i, img) => {
-            pObject.images.push(img);
-        });
-
-        apiService.get(pObject.id, (p) => { // let's record the product
-            pObject.data = p.data;
-            pObject.product = new Product(p.data.id);
-            pObject.product.name = new ProductField(p.data.elements[0]);
-            pObject.product.description = new ProductField(p.data.elements[1]);
-            pObject.product.images = new ProductField(p.data.elements[2]);
-        });
+        api
+            .get(pObject.id, 'product')
+            .then((p) => { // let's record the product
+                setProductData(p.data);
+            })
+        ;
 
         setListeners();
     }

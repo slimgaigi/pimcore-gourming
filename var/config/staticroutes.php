@@ -99,5 +99,23 @@ return [
         "legacy" => FALSE,
         "creationDate" => 1513454088,
         "modificationDate" => 1513454142
+    ],
+    7 => [
+        "id" => 7,
+        "name" => "update-product",
+        "pattern" => "/\\/product\\/update\\/([\\d])/",
+        "reverse" => "/product/update/%id",
+        "module" => "AppBundle",
+        "controller" => "@AppBundle\\Controller\\ProductController",
+        "action" => "update",
+        "variables" => "id",
+        "defaults" => NULL,
+        "siteId" => [
+
+        ],
+        "priority" => 0,
+        "legacy" => FALSE,
+        "creationDate" => 1513785500,
+        "modificationDate" => 1513789696
     ]
 ];

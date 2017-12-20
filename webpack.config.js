@@ -29,7 +29,8 @@ module.exports = {
                             'presets': [
                                 ['env', {
                                     'targets': {
-                                        'browsers': ['last 2 versions', 'ie >= 11']
+                                        'browsers': ['last 2 versions', 'ie >= 11'],
+                                        'uglify': true
                                     }
                                 }]
                             ]

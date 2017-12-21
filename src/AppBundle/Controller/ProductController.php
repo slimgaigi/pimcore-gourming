@@ -70,7 +70,7 @@ class ProductController extends FrontendController
   {
     $data = $request->getContent();
 
-    if (!empty($data)) {
+    if (!empty($data) && $this->canEdit()) {
       $params = json_decode($data, true);
       $product = Product::getById($params['id']);
       $images = [];

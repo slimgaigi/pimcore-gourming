@@ -7,49 +7,58 @@
     ] %}
 
     <section class="{{ productClasses | join(' ') }}">
-    {% if product.editable %}
-        <form action="" id="pForm">
-    {% endif %}
-            <h1 class="product__name">
-                <span class="product__value product__value--name">{{ product.name }}</span>
-                {% if product.editable %}
-                    <input type="text" class="product__input product__input--name" value="{{ product.name }}" id="pName" required>
-                {% endif %}
-            </h1>
-            <p class="product__description">
-                <span class="product__value product__value--description">{{ product.description }}</span>
-                {% if product.editable %}
-                    <textarea class="product__input product__input--description" id="pDescription">{{ product.description }}</textarea>
-                {% endif %}
-            </p>
-            <ul class="product__images-list">
-                {% for image in product.images %}
-                    <li class="product__images-item">
-                        <img src="{{ image }}" alt="" class="product__image">
-                        {% if product.editable %}
-                            <div class="product__image-ctas">
-                                <button type="button" class="cta cta--delete">
-                                    <svg class="icon icon--close">
-                                        <use xlink:href="#icon-close"></use>
-                                    </svg>
-                                </button>
-                                <input type="file" class="product__input product__input--image" id="pImage-{{ loop.index0 }}" name="images[]">
-                            </div>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
+        <h1 class="product__name">
+            <span class="product__value product__value--name">{{ product.name }}</span>
+            {% if product.editable %}
+                <input type="text" class="product__input product__input--name" value="{{ product.name }}" id="pName" required>
+                <button type="button" class="cta cta--validate">
+                    <svg class="icon icon--check">
+                        <use xlink:href="#icon-check"></use>
+                    </svg>
+                </button>
+            {% endif %}
+        </h1>
+        <p class="product__description">
+            <span class="product__value product__value--description">{{ product.description }}</span>
+            {% if product.editable %}
+                <textarea class="product__input product__input--description" id="pDescription">{{ product.description }}</textarea>
+                <button type="button" class="cta cta--validate">
+                    <svg class="icon icon--check">
+                        <use xlink:href="#icon-check"></use>
+                    </svg>
+                </button>
+            {% endif %}
+        </p>
+        <ul class="product__images-list">
+            {% for image in product.images %}
+                <li class="product__images-item">
+                    <img src="{{ image }}" alt="" class="product__image">
+                    {% if product.editable %}
+                        <div class="product__image-ctas">
+                            <button type="button" class="cta cta--delete">
+                                <svg class="icon icon--close">
+                                    <use xlink:href="#icon-close"></use>
+                                </svg>
+                            </button>
+                            <input type="file" class="product__input product__input--image" id="pImage-{{ loop.index0 }}" name="images[]">
+                        </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
 
-    {% if product.editable %}
+        {% if product.editable %}
             <button type="button" class="cta cta--add" id="addImage">
                 <span>{{ 'Add image' }}</span>
                 <svg class="icon icon--add">
                     <use xlink:href="#icon-add"></use>
                 </svg>
             </button>
-            <button type="submit" class="product__input product__input--submit">{{ 'Save changes' | trans }}</button>
-        </form>
-    {% endif %}
+
+            <svg class="icon icon--spinner">
+                <use xlink:href="#icon-spinner"></use>
+            </svg>
+        {% endif %}
     </section>
 
 {% endblock %}

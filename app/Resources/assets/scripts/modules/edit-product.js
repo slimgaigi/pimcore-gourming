@@ -48,19 +48,28 @@ module.exports = (function ($) {
     }
 
     function updateImagesList() {
-        let source = Rx.Observable.forkJoin(pObject.product.images.value.map((img) => {
-                return api.get(img.id, 'image');
-            })).subscribe((a) => {
-                $pImagesList.html('');
-                a.map((r, i) => {
-                    $(imgItemTpl.template({
-                        src: r.data.path + r.data.filename,
-                        index: i
-                    }).s).appendTo($pImagesList)
-                    ;
-                });
-            })
+        Rx.Observable.forkJoin(pObject.product.images.value.map((img) => {
+            return api.get(img.id, 'image');
+        })).subscribe((a) => {
+            $pImagesList.html('');
+            a.map((r, i) => {
+                $(imgItemTpl.template({
+                    src: r.data.path + r.data.filename,
+                    index: i
+                }).s).appendTo($pImagesList)
+                ;
+            });
+        })
         ;
+    }
+
+    function updateTextFields() {
+        $pName.find('.product__value').text(pObject.product.name.value);
+        $pNameInput.val(pObject.product.name.value);
+        $pName.removeClass('js-edit-mode');
+        $pDescription.find('.product__value').text(pObject.product.description.value);
+        $pDescriptionInput.val(pObject.product.description.value);
+        $pDescription.removeClass('js-edit-mode');
     }
 
     function setListeners() {
@@ -69,7 +78,9 @@ module.exports = (function ($) {
                 $popupContent = $('<div class="popup-content"></div>'),
                 imgIndex,
                 $delConfirm,
-                $delCancel
+                $delCancel,
+                updatedProduct,
+                data
             ;
 
             if ($target.hasClass('cta--delete')) {
@@ -84,26 +95,25 @@ module.exports = (function ($) {
                 });
 
                 $delConfirm.click(() => {
-                    let updatedProduct = Object.assign({}, pObject.product.native()),
-                        data
-                    ;
-
+                    $product.addClass('pending');
+                    updatedProduct = Object.assign({}, pObject.product.native());
                     updatedProduct.images.value = pObject.product.images.value.filter((o, i) => i !== imgIndex);
-
                     data = Object.assign({}, pObject.data, {
                         elements: [
                             updatedProduct.name,
                             updatedProduct.description,
                             updatedProduct.images
                         ]
-                    })
-                    ;
+                    });
 
                     api
                         .update(pObject.id, 'product', data)
-                        .then((r) => {
+                        .done((r) => {
                             setProductData(r.data);
                             updateImagesList();
+                        })
+                        .always(() => {
+                            $product.removeClass('pending');
                         })
                     ;
                     $.magnificPopup.close();
@@ -117,21 +127,69 @@ module.exports = (function ($) {
                 });
             }
 
+            if ($target.hasClass('cta--add')) {
+                // TODO: implement add image feature
+            }
+
+            if ($target.hasClass('cta--validate')) {
+                $product.addClass('pending');
+                $pName.removeClass('dirty');
+                $pDescription.removeClass('dirty');
+                updatedProduct = Object.assign({}, pObject.product.native());
+                $pNameInput.val().length && (updatedProduct.name.value = $pNameInput.val());
+                updatedProduct.description.value = $pDescriptionInput.val();
+                data = Object.assign({}, pObject.data, {
+                    elements: [
+                        updatedProduct.name,
+                        updatedProduct.description,
+                        updatedProduct.images
+                    ]
+                });
+                api
+                    .update(pObject.id, 'product', data)
+                    .done((r) => {
+                        setProductData(r.data);
+                        updateTextFields();
+                    })
+                    .always(() => {
+                        $product.removeClass('pending');
+                    })
+                ;
+            }
+
         });
         $pName.on({
             click: () => {
                 $pName.addClass('js-edit-mode');
+                $pDescription.removeClass('js-edit-mode');
             }
         });
+        $pNameInput.on({
+            keyup: (e) => {
+                if (pObject.product.name.value !== e.target.value.trim() && e.target.value.trim().length) {
+                    $pName.addClass('dirty');
+                } else {
+                    $pName.removeClass('dirty');
+                }
+            },
+            blur: updateTextFields
+        });
+
         $pDescription.on({
             click: () => {
                 $pDescription.addClass('js-edit-mode');
+                $pName.removeClass('js-edit-mode');
             }
         });
-        $pImagesList.on({
-            click: () => {
-                $pImagesList.addClass('js-edit-mode');
-            }
+        $pDescriptionInput.on({
+            keyup: (e) => {
+                if (pObject.product.description.value !== e.target.value.trim()) {
+                    $pDescription.addClass('dirty');
+                } else {
+                    $pDescription.removeClass('dirty');
+                }
+            },
+            blur: updateTextFields
         });
     }
 

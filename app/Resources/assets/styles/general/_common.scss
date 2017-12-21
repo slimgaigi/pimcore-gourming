@@ -4,9 +4,11 @@
 *, html {
     box-sizing: border-box;
 }
+
 html {
     font-size: 62.5%;
 }
+
 body {
     @extend %montserrat;
     padding: 0;
@@ -19,10 +21,12 @@ body {
         letter-spacing: 0.05em;
     }
 }
+
 ::selection {
     background: colors(blue);
     color: colors(white);
 }
+
 h1, .h1,
 h2, .h2,
 h3,
@@ -35,6 +39,7 @@ h4 {
         letter-spacing: 0;
     }
 }
+
 h1, .h1 {
     position: relative;
     font-size: 5rem;
@@ -49,25 +54,30 @@ h1, .h1 {
         font-size: fz-m(30);
     }
 }
+
 h2, .h2 {
     font-size: 4rem;
     color: colors(blue);
 }
+
 h3 {
     font-size: 2.5rem;
     color: colors(blue-dark);
 }
+
 h4 {
     font-size: 2rem;
     font-weight: normal;
     color: colors(blue-dark);
 }
+
 h5 {
     font-size: 1.4rem;
     font-weight: 500;
     line-height: (20/14);
     color: colors(gray);
 }
+
 p {
     font-size: 1.4rem;
     font-weight: 300;
@@ -78,14 +88,17 @@ p {
         text-decoration: underline;
     }
 }
+
 ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
+
 li {
     list-style: none;
 }
+
 a {
     font-size: 1.2rem;
     font-weight: 500;
@@ -98,10 +111,24 @@ a {
         text-decoration: none;
     }
 }
+
 img {
     width: 100%;
     height: auto;
 }
+
 strong {
     font-weight: 700;
-}  
+}
+
+.spinner {
+    animation: rotation 1.4s linear infinite;
+}
+
+.circle {
+    stroke: colors(gray-light);
+    stroke-dasharray: 187;
+    stroke-dashoffset: 0;
+    transform-origin: center;
+    animation: turn 1.4s ease-in-out infinite;
+}

@@ -1,3 +1,11 @@
+%cta-ne {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: rgba(colors(white), 0.8);
+    border: 1px solid colors(gray);
+}
+
 .products { // Products list page
 
     &__title {
@@ -93,21 +101,47 @@
 }
 
 .product { // Product detail page
+    .editable &__name,
+    .editable &__description {
+        &:hover {
+            position: relative;
 
-    #pForm {
-
+            &:before {
+                @extend %cta-ne;
+                content: 'click to edit...';
+                display: inline-block;
+                padding: 1em 2em;
+                font-size: 1rem;
+                font-style: italic;
+                font-weight: bold;
+                color: colors(blue);
+            }
+        }
     }
 
-    &__name,
-    &__description {
-        &.js-edit-mode,
-        &.editable:hover {
+    .editable &__name,
+    .editable &__description {
+        &.js-edit-mode {
+            &:before {
+                content: none;
+            }
             .product__value {
                 display: none;
             }
             .product__input {
                 display: block;
             }
+        }
+
+        &.dirty {
+            .cta--validate {
+                display: block;
+            }
+        }
+
+        .cta--validate {
+            @extend %cta-ne;
+            display: none;
         }
     }
 
@@ -160,10 +194,7 @@
             transition: opacity $speed ease, visibility 0s ease $speed;
 
             .cta--delete {
-                position: absolute;
-                right: 0;
-                background-color: rgba(colors(white), 0.8);
-                border: 1px solid colors(white);
+                @extend %cta-ne;
             }
 
             .product__input--image {
@@ -172,12 +203,28 @@
                 bottom: 0;
                 left: 0;
                 width: 100%;
-                background-color: rgba(colors(white),0.8);
+                background-color: rgba(colors(white), 0.8);
             }
         }
     }
 
     .cta--add {
         margin: 30px 0;
+    }
+
+    .spinner {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50px;
+        height: 50px;
+        transform: translate(-50%, -50%);
+    }
+
+    &.pending {
+        .spinner {
+            display: block;
+        }
     }
 }

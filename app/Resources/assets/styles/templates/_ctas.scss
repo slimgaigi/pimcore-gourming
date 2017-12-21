@@ -32,4 +32,20 @@
         height: 36px;
         color: colors(error);
     }
+
+    &--confirm,
+    &--cancel {
+        display: block;
+        padding: 1em 2em;
+        margin: 0 auto 15px;
+        background-color: colors(white);
+        border: 1px solid colors(gray-light);
+    }
+    &--confirm {
+        color: colors(green);
+    }
+
+    &--cancel {
+        color: colors(error);
+    }
 }

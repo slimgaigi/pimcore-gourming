@@ -22,6 +22,8 @@ module.exports = (function ($) {
         pObject = {
             id: null,
         },
+        confirmCtaTpl = S('<button type="button" class="cta cta--confirm">{{text}}</button>'),
+        cancelCtaTpl = S('<button type="button" class="cta cta--cancel">{{text}}</button>'),
         imgItemTpl = S(`
         <li class="product__images-item">
             <img src="{{ src }}" alt="" class="product__image">
@@ -73,8 +75,8 @@ module.exports = (function ($) {
             if ($target.hasClass('cta--delete')) {
                 imgIndex = $pImagesList.find('.cta--delete').index($target);
 
-                $delConfirm = $('<button type="button">I confirm image delete !</button>');
-                $delCancel = $('<button type="button">Cancel image delete</button>');
+                $delConfirm = $(confirmCtaTpl.template({text: 'I confirm image delete !'}).s);
+                $delCancel = $(cancelCtaTpl.template({text: 'Cancel image delete'}).s);
                 $popupContent.append($delConfirm, $delCancel);
 
                 $delCancel.click(() => {
